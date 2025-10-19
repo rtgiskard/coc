@@ -1,0 +1,19 @@
+Checks: '-*,
+  bugprone-*,
+  modernize-*,
+  performance-*,
+  readability-*,
+  cppcoreguidelines-*,
+  clang-analyzer-*,
+  misc-*,
+  llvm-header-guard,
+  llvm-include-order,
+  llvm-namespace-comment,
+  google-build-using-namespace,
+  -modernize-use-trailing-return-type,
+  -readability-braces-around-statements,
+  '
+
+CheckOptions:
+  readability-identifier-naming.NamespaceCase: lower_case
+  misc-non-private-member-variables-in-classes.IgnorePublicMemberVariables: 'true'
