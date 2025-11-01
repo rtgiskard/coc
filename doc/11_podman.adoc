@@ -1,0 +1,74 @@
+= 容器使用参考
+
+容器操作比较简单，常用两个: 构建，运行；另外再加几个管理容器的操作
+
+ps. 推荐 `podman` 替代 `docker`
+
+.获取镜像
+----
+# 构建镜像切 Dockerfile 目录构建
+cd dir_to_dockerfile
+podman build --rm -t image_tag_or_name .
+
+# 或者
+podman build --rm -t image_tag_or_name -f path/to/Dockerfile
+
+# 有现成镜像可直接从服务器拉取：
+podman pull alpine:lastest
+podman pull docker.io/library/alpine:latest
+----
+
+.运行容器
+----
+# 启动容器(从容器镜像生成容器实例，类似 类与实例 的关系)
+podman run --rm -it -v $PWD:/cc image_tag_or_name bash
+
+- 参数说明:
+	--rm					容器即用即删（最佳实践）
+	-i						交互式模式，可以输入交互
+	-t						分配一个虚拟终端，一般搭配 `-i`
+	-v $PWD:/cc				卷映射，将当前目录挂载到容器 /cc 目录
+	image_tag_or_name		镜像名
+	bash					要运行的命令
+
+# 从已启动的容器实例加载一个新终端
+podman ps								# 获取容器实例的名字
+podman exec -it container_name bash		# 挂载终端，执行 bash
+----
+
+.管理容器
+----
+# 查看容器镜像
+podman images
+
+	REPOSITORY                TAG            IMAGE ID      CREATED       SIZE
+	docker.io/library/alpine  latest         9234e8fb04c4  8 days ago    8.61 MB
+	docker.io/library/debian  latest         047bd8d81940  2 weeks ago   124 MB
+	docker.io/library/ubuntu  latest         e0f16e6366fe  1 months ago  80.6 MB
+
+# 删除孤立没有引用的容器镜像
+podman image prune
+
+# 查看运行的容器实例
+podman ps
+podman ps -a  (查看所有容器实例)
+
+	CONTAINER ID  IMAGE                           COMMAND  CREATED      STATUS                   PORTS   NAMES
+	bd4fae77ee29  quay.io/podman/stable:latest    bash     3 weeks ago  Created                          keen_carson
+	4075569248bb  docker.io/library/nginx:latest  --help   9 days ago   Exited (127) 9 days ago  80/tcp  nifty_brown
+
+# 查看运行中的容器状态，类似 top
+podman stat
+
+# kill 容器实例
+podman kill container_name
+
+# 查看容器输出打印(一般对于后台运行的 detached 的容器, -f 持续输出)
+podman logs -f container_name
+
+# 删除容器实例
+podman rm container_name
+
+# 删除容器镜像
+podman rmi image_name_or_id
+----

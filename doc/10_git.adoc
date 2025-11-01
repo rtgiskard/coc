@@ -1,0 +1,82 @@
+= git 使用参考
+
+== 常规操作
+
+.基本操作
+----
+# 克隆远端仓库，切工作目录
+git clone https://github.com/rogerdudler/git-guide.git
+cd git-guide
+
+git status			# 本地修改代码后，查看本地状态
+git add .			# 添加修改到暂存区
+git commit			# 从暂存区创建提交
+git push			# 推送提交到远端仓库
+
+git log				# 查看提交记录
+git diff --cached	# 查看暂存修改
+git diff a b		# 比较两个提交
+git diff HEAD^		# 比较相对于上个提交的修改
+----
+
+.仓库同步
+----
+git remote -v		# 查看远端仓库信息
+git fetch			# 拉取远端仓库更新
+git fetch --prune	# 拉取时，同步删除远端移除的分支
+
+git pull			# 拉取 + 自动合并 (多端协作一般使用: fetch + rebase)
+----
+
+.其它
+----
+# 查看提交记录，分支间按时间顺序排序
+git log --oneline --decorate --graph --date-order --all
+git log --oneline --decorate --graph --date-order HEAD rc-0.1.x origin/main
+
+# 修改提交记录
+git rebase					# 移花接木
+git rebase -i $COMMIT_ID	# 从某个提交开始交互式修改
+
+# 多分支并行进行
+git stash			# 切换前暂存未提交的修改, push/pop
+git worktree		# 在独立工作目录切出分支
+
+# 二分查找，锁定问题提交
+git bisect
+
+# 其它
+git reset			# 重置暂存区乃至工作目录
+git reflog			# 查看操作记录，多用于本地恢复
+----
+
+== 常见流程
+
+.合并修复到目标分支
+----
+git checkout rc-0.1.x		# 切目标分支
+git checkout -b fix_abc		# 基于当前分支创建新分支
+
+git checkout -b fix_abc rc-0.1.x	# 前面两步二合一
+
+git cherry-pick abcd02468	# 将其它分支单个提交添加到当前分支
+
+git push					# 提交分支 (按命令输出提示把分支推送到服务器)
+----
+
+.创建合并请求
+----
+切代码仓库网页端:
+	创建合并 > 选择修复分支和目标分支 > 选择评审人 > 创建提交
+----
+
+.合并后本地仓库清理
+----
+git fetch --prune			# 一般合并后远端仓库默认删除合并用的临时分支，本地建议同步删除
+git branch -D fix_abc		# 本地已经 checkout 的分支需要手动删除
+----
+
+== 相关参考
+
+- https://rogerdudler.github.io/git-guide/index.zh.html[git 简明指南]
+- https://openaitx.github.io/projects/jesseduffield/lazygit/README-zh-CN.html[lazygit]
