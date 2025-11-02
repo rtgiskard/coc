@@ -30,7 +30,7 @@ git pull			# 拉取 + 自动合并 (多端协作一般使用: fetch + rebase)
 
 .其它
 ----
-# 查看提交记录，分支间按时间顺序排序
+# 查看提交记录
 git log --oneline --decorate --graph --date-order --all
 git log --oneline --decorate --graph --date-order HEAD rc-0.1.x origin/main
 
@@ -38,16 +38,14 @@ git log --oneline --decorate --graph --date-order HEAD rc-0.1.x origin/main
 git rebase					# 移花接木
 git rebase -i $COMMIT_ID	# 从某个提交开始交互式修改
 
-# 多分支并行进行
+# 多分支并行
 git stash			# 切换前暂存未提交的修改, push/pop
 git worktree		# 在独立工作目录切出分支
 
-# 二分查找，锁定问题提交
-git bisect
-
-# 其它
+# misc
 git reset			# 重置暂存区乃至工作目录
 git reflog			# 查看操作记录，多用于本地恢复
+git bisect			# 二分查找，锁定问题提交
 ----
 
 == 常见流程
